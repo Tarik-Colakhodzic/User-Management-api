@@ -1,6 +1,7 @@
 using Application.Mapper;
 using Application.Services.User;
 using Infrastructure;
+using Infrastructure.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +29,7 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(new ErrorFilter()));
             services.AddSwaggerGen();
             services.AddPersisatnce(Configuration);
             services.AddAutoMapper(typeof(MapperProfile));
