@@ -10,6 +10,8 @@ namespace Application.Common.Interfaces
         DbSet<Permission> Permissions { get; set; }
         DbSet<UserPermissions> UserPermissions { get; set; }
 
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
         Task<int> SaveChangesAsync();
     }
 }

@@ -1,3 +1,5 @@
+using Application.Mapper;
+using Application.Services.User;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +31,9 @@ namespace WebApi
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddPersisatnce(Configuration);
+            services.AddAutoMapper(typeof(MapperProfile));
+
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
