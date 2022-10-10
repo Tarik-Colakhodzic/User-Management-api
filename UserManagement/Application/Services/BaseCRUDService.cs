@@ -1,8 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
+using Application.Helpers;
 using AutoMapper;
 using Domain.Common;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -10,9 +12,9 @@ namespace Application.Services
     public class BaseCRUDService<TModel, TEntity, TSearch, TInsert, TUpdate>
         where TModel : class where TEntity : class where TSearch : class where TInsert : class where TUpdate : class
     {
-        private readonly IApplicationDBContext _context;
-        private readonly IMapper _mapper;
-        private readonly DbSet<TEntity> _entity;
+        protected readonly IApplicationDBContext _context;
+        protected readonly IMapper _mapper;
+        protected readonly DbSet<TEntity> _entity;
 
         public BaseCRUDService(IApplicationDBContext context, IMapper mapper)
         {
@@ -21,9 +23,22 @@ namespace Application.Services
             _entity = _context.Set<TEntity>();
         }
 
-        public virtual async Task<IEnumerable<TModel>> GetAsync()
+        public virtual async Task<PagedList<TEntity, TModel>> GetAsync(TSearch search)
         {
-            return _mapper.Map<List<TModel>>(await _entity.ToListAsync());
+            if (search is BaseSearchModel baseSearchModel)
+            {
+                var entity = _entity.AsQueryable();
+                if (baseSearchModel.IncludeList?.Any() ?? false)
+                {
+                    foreach (var item in baseSearchModel.IncludeList)
+                    {
+                        entity = entity.Include(item);
+                    }
+                }
+                return await PagedList<TEntity, TModel>.CreateAsync(entity, _mapper, baseSearchModel.PageNumber, baseSearchModel.PageSize);
+            }
+
+            return await PagedList<TEntity, TModel>.CreateAsync(_entity, _mapper);
         }
 
         public virtual async Task<TModel> GetByIdAsync(int id)

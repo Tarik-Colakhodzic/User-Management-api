@@ -1,5 +1,7 @@
-﻿using Application.Services;
+﻿using Application.Models.Responses;
+using Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -17,9 +19,10 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<IActionResult> GetAsync()
+        public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search)
         {
-            return Ok(await _service.GetAsync());
+            var entities = await _service.GetAsync(search);
+            return Ok(new PagedResponse<IEnumerable<TModel>>(entities, entities.PageNumber, entities.PageSize));
         }
 
         [HttpGet("{id}")]
