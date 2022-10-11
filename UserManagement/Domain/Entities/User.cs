@@ -13,6 +13,6 @@ namespace Domain.Entities
         public string Email { get; set; }
         public bool Status { get; set; }
 
-        public virtual ICollection<UserPermissions> Perrmissions { get; set; }
+        public virtual ICollection<UserPermissions> UserPermissions { get; set; }
     }
 }

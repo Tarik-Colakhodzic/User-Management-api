@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Models.Requests.User
 {
@@ -14,5 +15,7 @@ namespace Application.Models.Requests.User
         public string Email { get; set; }
 
         public bool Status { get; set; }
+
+        public List<int> Permissions { get; set; }
     }
 }

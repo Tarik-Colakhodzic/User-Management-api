@@ -10,6 +10,8 @@ namespace Application.Mapper
         public MapperProfile()
         {
             CreateMap<User, UserModel>().ReverseMap();
+            CreateMap<UserPermissions, UserPermissionsModel>().ReverseMap();
+            CreateMap<Permission, PermissionModel>().ReverseMap();
             CreateMap<User, UserInsertRequest>().ReverseMap();
             CreateMap<User, UserUpdateRequest>().ReverseMap();
         }

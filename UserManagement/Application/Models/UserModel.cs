@@ -1,4 +1,5 @@
 ﻿using Application.Common.Models;
+using System.Collections.Generic;
 
 namespace Application.Models
 {
@@ -9,5 +10,7 @@ namespace Application.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public bool Status { get; set; }
+
+        public virtual ICollection<UserPermissionsModel> UserPermissions { get; set; }
     }
 }
