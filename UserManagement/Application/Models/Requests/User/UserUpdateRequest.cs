@@ -11,11 +11,9 @@ namespace Application.Models.Requests.User
         [Required(AllowEmptyStrings = false)]
         public string LastName { get; set; }
 
-        [EmailAddress()]
+        [EmailAddress]
         public string Email { get; set; }
 
         public bool Status { get; set; }
-
-        public List<int> Permissions { get; set; }
     }
 }

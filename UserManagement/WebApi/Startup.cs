@@ -1,5 +1,7 @@
 using Application.Mapper;
+using Application.Services.Permission;
 using Application.Services.User;
+using Application.Services.UserPermissions;
 using Infrastructure;
 using Infrastructure.Filters;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +37,8 @@ namespace WebApi
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IUserPermissionsService, UserPermissionsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +57,11 @@ namespace WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {

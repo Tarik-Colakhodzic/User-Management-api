@@ -6,6 +6,7 @@ using AutoMapper;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -45,6 +46,7 @@ namespace Application.Services.User
                 {
                     entity = entity.Where(x => x.Status == search.Status);
                 }
+                entity = entity.Where(x => x.IsDeleted == false);
 
                 if (search.IncludeList?.Any() ?? false)
                 {
@@ -68,30 +70,6 @@ namespace Application.Services.User
             _context.Users.Add(entity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<UserModel>(entity);
-        }
-
-        public override async Task<UserModel> UpdateAsync(int id, UserUpdateRequest model)
-        {
-            var entity = await _entity.Include(x => x.UserPermissions).FirstOrDefaultAsync(x => x.Id == id);
-            _mapper.Map(model, entity);
-
-            var permissionIdsToRemove = entity.UserPermissions.Select(x => x.PermissionId).Except(model.Permissions);
-            var permissionIdsToAdd = model.Permissions.Except(entity.UserPermissions.Select(x => x.Id));
-
-            foreach (var permissionId in permissionIdsToAdd)
-            {
-                var userPermission = new UserPermissions
-                {
-                    UserId = entity.Id,
-                    PermissionId = permissionId
-                };
-
-                await _context.UserPermissions.AddAsync(userPermission);
-            }
-            _context.UserPermissions.RemoveRange(entity.UserPermissions.Where(x => permissionIdsToRemove.Any(y => y == x.PermissionId)));
-
-            await _context.SaveChangesAsync();
             return _mapper.Map<UserModel>(entity);
         }
 

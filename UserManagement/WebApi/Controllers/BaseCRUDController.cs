@@ -37,7 +37,7 @@ namespace WebApi.Controllers
             return Ok(await _service.InsertAsync(request));
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public virtual async Task<IActionResult> UpdateAsync(int id, [FromBody] TUpdate model)
         {
             return Ok(await _service.UpdateAsync(id, model));
