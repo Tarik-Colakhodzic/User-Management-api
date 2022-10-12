@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Insert([FromBody] TInsert request)
+        public virtual async Task<IActionResult> InsertAsync([FromBody] TInsert request)
         {
             return Ok(await _service.InsertAsync(request));
         }

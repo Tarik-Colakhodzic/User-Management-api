@@ -93,5 +93,19 @@ namespace Application.Services.User
             byte[] inArray = algorithm.ComputeHash(dst);
             return Convert.ToBase64String(inArray);
         }
+
+        public async Task<UserModel> GetByIdAsync(int id, string includeItems)
+        {
+            var entity = _entity.AsQueryable();
+            if (!string.IsNullOrEmpty(includeItems))
+            {
+                var includeArray = includeItems.Split(",");
+                foreach (var include in includeArray)
+                {
+                    entity = entity.Include(include);
+                }
+            }
+            return _mapper.Map<UserModel>(await entity.FirstOrDefaultAsync(x => x.Id == id));
+        }
     }
 }

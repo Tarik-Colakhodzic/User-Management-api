@@ -1,8 +1,11 @@
 ﻿using Application.Models;
 using Application.Models.Requests.User;
+using Application.Models.Requests.UserPermissions;
 using Application.Services.User;
+using Application.Services.UserPermissions;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -10,8 +13,31 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     public class UserController : BaseCRUDController<UserModel, User, UserSearchRequest, UserInsertRequest, UserUpdateRequest>
     {
-        public UserController(IUserService service) : base(service)
+        private IUserService _userService;
+        private readonly IUserPermissionsService _userPermissionsService;
+
+        public UserController(IUserService service, IUserPermissionsService userPermissionsService) : base(service)
         {
+            _userService = service;
+            _userPermissionsService = userPermissionsService;
+        }
+
+        [HttpGet("{id}/userPermissions")]
+        public virtual async Task<IActionResult> GetUserPermissions(int id, [FromQuery] string includeItems)
+        {
+            return Ok(await _userService.GetByIdAsync(id, includeItems));
+        }
+
+        [HttpPost("{userId}/userPermissions/{permissionId}")]
+        public virtual async Task<IActionResult> InsertUserPermissionAsync(int userId, int permissionId)
+        {
+            return Ok(await _userPermissionsService.InsertAsync(new UserPermissionsInsertRequest { UserId = userId, PermissionId = permissionId }));
+        }
+
+        [HttpDelete("userPermissions/{userPermissionId}")]
+        public virtual async Task<IActionResult> DeleteUserPermissionAsync(int userPermissionId)
+        {
+            return Ok(await _userPermissionsService.DeleteAsync(userPermissionId));
         }
     }
 }
