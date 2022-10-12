@@ -2,15 +2,25 @@
 using Application.Services.Permission;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PermissionController : BaseCRUDController<PermissionModel, Permission, object, object, object>
+    public class PermissionController : ControllerBase
     {
-        public PermissionController(IPermissionService service) : base(service)
+        private readonly IPermissionService _permissionService;
+
+        public PermissionController(IPermissionService service)
         {
+            _permissionService = service;
+        }
+
+        [HttpGet("all")]
+        public virtual async Task<IActionResult> GetAllAsync()
+        {
+            return Ok(await _permissionService.GetAllAsync());
         }
     }
 }

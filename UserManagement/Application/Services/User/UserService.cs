@@ -44,13 +44,46 @@ namespace Application.Services.User
                 {
                     entity = entity.Where(x => x.Status == search.Status);
                 }
-                entity = entity.Where(x => x.IsDeleted == false);
+                if (search.IsDeleted.HasValue)
+                {
+                    entity = entity.Where(x => x.IsDeleted == search.IsDeleted);
+                }
 
                 if (search.IncludeList?.Any() ?? false)
                 {
                     foreach (var includeEntity in search.IncludeList)
                     {
                         entity = entity.Include(includeEntity);
+                    }
+                }
+
+                if(!string.IsNullOrEmpty(search.SortColumn) && !string.IsNullOrEmpty(search.SortDirection))
+                {
+                    var isAsc = search.SortDirection == "asc";
+                    var firstEntity = await entity.FirstOrDefaultAsync();
+                    if (firstEntity != null)
+                    {
+                        var propertyName = firstEntity.GetType().GetProperty(search.SortColumn).Name;
+                        if (nameof(firstEntity.FirstName) == propertyName)
+                        {
+                            entity = isAsc ? entity.OrderBy(x => x.FirstName.ToLower()) : entity.OrderByDescending(x => x.FirstName.ToLower());
+                        }
+                        else if (nameof(firstEntity.LastName) == propertyName)
+                        {
+                            entity = isAsc ? entity.OrderBy(x => x.LastName.ToLower()) : entity.OrderByDescending(x => x.LastName.ToLower());
+                        }
+                        else if (nameof(firstEntity.Email) == propertyName)
+                        {
+                            entity = isAsc ? entity.OrderBy(x => x.Email.ToLower()) : entity.OrderByDescending(x => x.Email.ToLower());
+                        }
+                        else if (nameof(firstEntity.Username) == propertyName)
+                        {
+                            entity = isAsc ? entity.OrderBy(x => x.Username.ToLower()) : entity.OrderByDescending(x => x.Username.ToLower());
+                        }
+                        else if (nameof(firstEntity.Username) == propertyName)
+                        {
+                            entity = isAsc ? entity.OrderBy(x => x.Status) : entity.OrderByDescending(x => x.Status);
+                        }
                     }
                 }
             }
