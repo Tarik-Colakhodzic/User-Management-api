@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search)
         {
             var entities = await _service.GetAsync(search);
-            return Ok(new PagedResponse<IEnumerable<TModel>>(entities, entities.PageNumber, entities.PageSize));
+            return Ok(new PagedResponse<IEnumerable<TModel>>(entities, entities.PageNumber, entities.PageSize, entities.Count));
         }
 
         [HttpGet("{id}")]

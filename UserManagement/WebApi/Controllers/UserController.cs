@@ -28,10 +28,10 @@ namespace WebApi.Controllers
             return Ok(await _userService.GetByIdAsync(id, includeItems));
         }
 
-        [HttpPost("{userId}/userPermissions/{permissionId}")]
-        public virtual async Task<IActionResult> InsertUserPermissionAsync(int userId, int permissionId)
+        [HttpPost("userPermissions")]
+        public virtual async Task<IActionResult> InsertUserPermissionAsync([FromBody] UserPermissionsInsertRequest insertRequest)
         {
-            return Ok(await _userPermissionsService.InsertAsync(new UserPermissionsInsertRequest { UserId = userId, PermissionId = permissionId }));
+            return Ok(await _userPermissionsService.InsertAsync(insertRequest));
         }
 
         [HttpDelete("userPermissions/{userPermissionId}")]
