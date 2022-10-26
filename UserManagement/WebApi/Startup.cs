@@ -28,6 +28,7 @@ namespace WebApi
             services.AddSwaggerGen();
             services.AddPersisatnce(Configuration);
             services.AddAutoMapper(typeof(MapperProfile));
+            services.AddMemoryCache();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPermissionService, PermissionService>();
