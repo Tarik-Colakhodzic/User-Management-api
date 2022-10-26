@@ -1,6 +1,4 @@
-﻿using Application.Models;
-using Application.Services.Permission;
-using Domain.Entities;
+﻿using Application.Services.Permission;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

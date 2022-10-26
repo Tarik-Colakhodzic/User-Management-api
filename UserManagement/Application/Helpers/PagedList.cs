@@ -15,8 +15,10 @@ namespace Application.Helpers
         public int PageSize { get; set; }
         public int TotalPages { get; set; }
         public int TotalCount { get; set; }
+
         public bool HasPrevious
         { get { return PageNumber > 1; } }
+
         public bool HasNext
         { get { return PageNumber > TotalPages; } }
 

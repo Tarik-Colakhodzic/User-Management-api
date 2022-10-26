@@ -18,11 +18,6 @@ namespace Infrastructure.Persistence
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<UserPermissions> UserPermissions { get; set; }
 
-        public override DbSet<TEntity> Set<TEntity>() where TEntity : class
-        {
-            return base.Set<TEntity>();
-        }
-
         public Task<int> SaveChangesAsync()
         {
             AddAuditInfo();

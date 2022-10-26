@@ -3,7 +3,7 @@ using Application.Services.Permission;
 using Application.Services.User;
 using Application.Services.UserPermissions;
 using Infrastructure;
-using Infrastructure.Filters;
+using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,11 +24,12 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => options.Filters.Add(new ErrorFilter()));
+            services.AddControllers();
             services.AddSwaggerGen();
             services.AddPersisatnce(Configuration);
             services.AddAutoMapper(typeof(MapperProfile));
             services.AddMemoryCache();
+            services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPermissionService, PermissionService>();
@@ -51,6 +52,8 @@ namespace WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.UseCors(x => x
                 .AllowAnyOrigin()

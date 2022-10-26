@@ -26,12 +26,12 @@ namespace Application.Services.Permission
         {
             var permissions = _memoryCache.Get<List<PermissionModel>>("permissions");
 
-            if(permissions == null)
+            if (permissions == null)
             {
                 permissions = _mapper.Map<List<PermissionModel>>(await _context.Permissions.ToListAsync());
                 _memoryCache.Set("permissions", permissions, TimeSpan.FromDays(1));
             }
-             
+
             return permissions;
         }
     }
